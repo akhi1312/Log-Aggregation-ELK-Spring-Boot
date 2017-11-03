@@ -1,8 +1,20 @@
-# spring-boot-elk
+
 Log Aggregation (ELK) for Spring Boot application
 ========================
 
-This simple example demonstrates how easy you can enable quite powerful and advanced log management in to your Spring Boot application using Docker.
+## Overview
+
+Designing a middle-ware logging component which can handle two types of logs; first is the e-commerce site customer's activities
+and second is application logs.This logging component will be used by all applications in the organization hence it should be able to keep logs per application. 
+Quick search for application log is required.
+
+## Architecture
+Log messages are captured e.g. by custom logging appenders and sent to a ZMQ queue. A ZMQ queue is very lightweight, very fast and supported out-of-the box by an ELK stack.
+The ELK stack consists of three components:
+* Logstash for receiving log messages, e.g.extracting appropriate log data.
+* ElasticSearch for indexing the log data.
+* Kibana for providing a Web based user interface with capabilities like fulltext search, filtering and dashboards.
+
 
 **Stack of frameworks/technologies:**
 * Spring Boot
@@ -24,13 +36,9 @@ _Prerequisites:_
 1. In order to run the application in docker you would need to build a docker image first.
 This simple maven command will to the trick:
 `mvn clean package docker:build -Dmaven.test.skip=true`
-<br />_**Note**: for Mac users it can be more difficult.
-Make sure that you have Environment variables properly exported.
-The easiest way to do this is the following command (https://docs.docker.com/machine/reference/env/): 
-`eval $(docker-machine env default)` <br />
-DOCKER_TLS_VERIFY=1 <br />
-DOCKER_HOST=tcp://localhost:2376; //you can also use IP address, find the value by typing: `docker-machine ls` <br />
-DOCKER_CERT_PATH=/Users/{user}/.docker/machine/certs_ <br />
+
+Make sure that you have Environment variables properly exported. (https://docs.docker.com/machine/reference/env/): 
+
 
 2. Go to root of the project and run: `docker-compose up -d`
 Docker will pull all missing images and start new containers.
