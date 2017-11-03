@@ -1,0 +1,53 @@
+version: '2'
+volumes:
+  data-mongo:
+    external:
+      name: spring-boot-restful-data-mongo
+services:
+
+ mongodb:
+  container_name: user-datastore
+  image: mongo:3.2.9
+  command: mongod --smallfiles
+  volumes:
+   - data-mongo:/data/db
+
+ web:
+  container_name: user-service
+  image: javalogaggregation_web
+  depends_on: # user-datastore will be started before the people-service
+   - mongodb
+  ports:
+   - "8080:8080"
+  links:
+   - mongodb
+   - logstash
+  environment:
+    SPRING_DATA_MONGODB_URI: mongodb://mongodb/test
+         
+ elasticsearch:
+  image: elasticsearch
+  command: elasticsearch -Des.network.host=0.0.0.0
+  ports:
+   - "9200:9200"
+   - "9300:9300"
+
+ logstash:
+  image: logstash
+  command: logstash -f /etc/logstash/conf.d/logstash.conf
+  volumes:
+   - ./src/main/logstash/config:/etc/logstash/conf.d
+  ports:
+   - "5000:5000"
+  links:
+   - elasticsearch
+
+ kibana:
+  image: kibana
+  container_name: kibana
+  environment:
+   - ELASTICSEARCH_URL=http://elasticsearch:9200
+  ports:
+   - "5601:5601"
+  links:
+   - elasticsearch
