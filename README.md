@@ -9,7 +9,7 @@ and second is application logs.This logging component will be used by all applic
 Quick search for application log is required.
 
 ## Architecture
-Log messages are captured e.g. by custom logging appenders and sent to a ZMQ queue. A ZMQ queue is very lightweight, very fast and supported out-of-the box by an ELK stack.
+Log messages are captured e.g. by custom logging appenders and sent to a Kafka Queue. A ZMQ queue is very lightweight, very fast and supported out-of-the box by an ELK stack.
 The ELK stack consists of three components:
 * Logstash for receiving log messages, e.g.extracting appropriate log data.
 * ElasticSearch for indexing the log data.
@@ -22,6 +22,7 @@ The ELK stack consists of three components:
 * Logstash
 * ElasticSearch
 * Kibana
+* Kafka
 * Docker
 
 Tested with 
